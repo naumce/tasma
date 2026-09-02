@@ -1,0 +1,14 @@
+# Static site: publish the public/ folder as-is, no build step.
+[build]
+  publish = "public"
+
+# Hero frames and images never change once deployed -- let browsers cache them hard.
+[[headers]]
+  for = "/frames/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

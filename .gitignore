@@ -1,0 +1,10 @@
+# source material -- generated clips and the merged hero video (60 MB); not needed to serve the site
+source/clips/
+source/*.mp4
+
+# local tooling noise
+__pycache__/
+*.pyc
+.playwright-mcp/
+.DS_Store
+Thumbs.db
