@@ -19,7 +19,7 @@
     --serif: "Cormorant Garamond", "Playfair Display", Georgia, "Times New Roman", serif;
     --sans: "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
     --nav-h: 72px;
-    --hero-track: 500vh;
+    --hero-track: 450vh;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -155,7 +155,7 @@
     background: linear-gradient(to top, rgba(5,4,3,0.75), rgba(5,4,3,0.15) 45%, rgba(5,4,3,0.1));
   }
   .rail__copy { position: relative; z-index: 1; text-align: center; padding: 0 24px; }
-  .rail__copy h2 { font-size: clamp(44px, 7vw, 88px); letter-spacing: 0.14em; }
+  .rail__copy h2 { font-size: clamp(36px, 6.2vw, 80px); letter-spacing: 0.1em; max-width: 100vw; }
   .rail__copy p { margin-top: 14px; font-family: var(--serif); font-style: italic; font-size: clamp(18px, 2vw, 24px); }
   .rail__copy .eyebrow { margin-bottom: 16px; }
 
@@ -273,7 +273,7 @@
 
   /* ---------- responsive ---------- */
   @media (max-width: 900px) {
-    :root { --hero-track: 350vh; }
+    :root { --hero-track: 330vh; }
     .explainer { grid-template-columns: 1fr; }
     .explainer__media { position: relative; height: 60vh; }
     .panel { min-height: auto; padding: 64px 28px; border-left: 0; border-top: 1px solid var(--gold-dim); }
@@ -490,12 +490,20 @@
   gsap.registerPlugin(ScrollTrigger);
 
   /* =========================================================
-     HERO -- canvas frame sequence with a rolling cache
+     HERO -- canvas frame sequence, three quality tiers, rolling cache
+     Ported from the Terra Spice engine:
+       - preloader measures throughput on the middle tier, then moves up to
+         the 1920 tier (fast) or down to the 640 tier (slow)
+       - one draw per animation frame, never cancelled
+       - directional prefetch with an urgent head so fast flicks stay fed
      ========================================================= */
-  const TOTAL_FRAMES = 605;         // files in frames/ -- frame_0001.jpg .. frame_0605.jpg
-  const PRELOAD_COUNT = 40;         // reveal the page after these
-  const CACHE_RADIUS = 60;          // decoded frames kept on each side of the current one
-  const PREFETCH_AHEAD = 15;        // extra frames requested in the scroll direction
+  const TOTAL_FRAMES = 523;         // frames/<tier>/frame_0001.webp ..
+  const PRELOAD_COUNT = 40;
+  const WINDOW_AHEAD = 80;
+  const CONCURRENCY = 10;
+  const SLOW_FPS = 45;                     // below: drop to the small tier
+  const FAST_FPS = 90;                     // above: upgrade to the HD tier
+  const MOBILE_MAX_WIDTH = 820;
 
   const track = document.getElementById("heroTrack");
   const canvas = document.getElementById("heroCanvas");
@@ -504,48 +512,79 @@
   const loaderLine = document.getElementById("loaderLine");
   const copyNodes = Array.from(document.querySelectorAll("#heroCopy > *"));
 
-  const frames = new Array(TOTAL_FRAMES + 1).fill(null);   // 1-indexed Image cache
-  const pending = new Set();                                 // indices currently downloading
+  const conn = navigator.connection || {};
+  const slowHint = Boolean(conn.saveData) || /(^|-)2g$|^3g$/.test(conn.effectiveType || "");
+  const isMobile = window.innerWidth <= MOBILE_MAX_WIDTH || slowHint;
+  let tier = isMobile ? "mobile" : "desktop";   // "hd" | "desktop" | "mobile"
+
+  const frames = new Map();                 // index -> decoded Image
+  const pending = new Set();
+  const queue = [];
+  let active = 0;
   let current = 1;
   let direction = 1;
   let drawQueued = false;
 
-  const framePath = (i) => `frames/frame_${String(i).padStart(4, "0")}.jpg`;
-  const inWindow = (i) => Math.abs(i - current) <= CACHE_RADIUS;
+  const framePath = (i) => `frames/${tier}/frame_${String(i).padStart(4, "0")}.webp`;
 
-  function loadFrame(i, onLoad) {
-    if (i < 1 || i > TOTAL_FRAMES || frames[i] || pending.has(i)) return;
-    pending.add(i);
-    const img = new Image();
-    img.decoding = "async";
-    img.onload = () => {
-      pending.delete(i);
-      if (!inWindow(i)) return;            // scrolled away meanwhile -- let it be collected
-      frames[i] = img;
-      if (i === current) queueDraw();
-      if (onLoad) onLoad(i);
-    };
-    img.onerror = () => pending.delete(i);
-    img.src = framePath(i);
+  function load(i) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("frame " + i));
+      img.src = framePath(i);
+    });
   }
 
-  function ensureWindow() {
-    for (let k = 1; k <= PREFETCH_AHEAD; k += 1) loadFrame(current + k * direction);
-    for (let k = 0; k <= CACHE_RADIUS; k += 1) {
-      loadFrame(current + k);
-      loadFrame(current - k);
+  function pump() {
+    while (active < CONCURRENCY && queue.length) {
+      const i = queue.shift();
+      if (frames.has(i) || pending.has(i)) continue;
+      pending.add(i);
+      active += 1;
+      load(i)
+        .then((img) => { frames.set(i, img); if (Math.abs(i - current) <= 1) queueDraw(); })
+        .catch(() => {})
+        .finally(() => { pending.delete(i); active -= 1; pump(); });
     }
-    for (let i = 1; i <= TOTAL_FRAMES; i += 1) {
-      if (frames[i] && !inWindow(i)) frames[i] = null;   // prune outside the window
+  }
+
+  function enqueue(indices) {
+    for (const i of indices) {
+      if (i >= 1 && i <= TOTAL_FRAMES && !frames.has(i) && !pending.has(i)) queue.push(i);
     }
+    pump();
+  }
+
+  function evict(center) {
+    const keep = WINDOW_AHEAD * 2;
+    for (const i of Array.from(frames.keys())) {
+      if (Math.abs(i - center) > keep && i > PRELOAD_COUNT) frames.delete(i);
+    }
+  }
+
+  /* Reprioritise around the current frame: a small urgent head in the scroll
+     direction first, then the wider window, then a little behind. */
+  function seek(index) {
+    const i = Math.max(1, Math.min(TOTAL_FRAMES, Math.round(index)));
+    if (i !== current) direction = i > current ? 1 : -1;
+    current = i;
+    const urgent = Array.from({ length: 8 }, (_, k) => i + direction * k);
+    const ahead = Array.from({ length: WINDOW_AHEAD }, (_, k) => i + direction * (k + 8));
+    const behind = Array.from({ length: Math.floor(WINDOW_AHEAD / 3) }, (_, k) => i - direction * (k + 1));
+    queue.length = 0;
+    enqueue([...urgent, ...ahead, ...behind]);
+    evict(i);
   }
 
   function nearestLoaded(i) {
-    for (let d = 0; d <= CACHE_RADIUS; d += 1) {
-      if (frames[i - d]) return frames[i - d];
-      if (frames[i + d]) return frames[i + d];
+    if (frames.has(i)) return frames.get(i);
+    for (let d = 1; d < TOTAL_FRAMES; d += 1) {
+      if (frames.has(i - d)) return frames.get(i - d);
+      if (frames.has(i + d)) return frames.get(i + d);
     }
-    return frames[1];
+    return null;
   }
 
   function sizeCanvas() {
@@ -560,7 +599,7 @@
     if (!img) return;
     const cw = canvas.width;
     const ch = canvas.height;
-    const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);   // cover-fit, never letterbox
+    const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);   // cover-fit
     const w = img.naturalWidth * scale;
     const h = img.naturalHeight * scale;
     ctx.fillStyle = "#050403";
@@ -575,7 +614,7 @@
   }
 
   function heroProgress() {
-    const rect = track.getBoundingClientRect();          // never window.scrollY alone
+    const rect = track.getBoundingClientRect();
     const scrollable = rect.height - window.innerHeight;
     if (scrollable <= 0) return 0;
     return Math.min(1, Math.max(0, -rect.top / scrollable));
@@ -593,33 +632,50 @@
     const progress = heroProgress();
     const index = 1 + Math.round(progress * (TOTAL_FRAMES - 1));
     if (index !== current) {
-      direction = index > current ? 1 : -1;
-      current = index;
-      ensureWindow();
+      seek(index);
       queueDraw();
     }
     updateCopy(progress);
   }
 
+  /* Decode the opening frames on the current tier, report progress, and
+     measure throughput. Never blocks the page: settles after 6 s regardless. */
   function preload() {
-    let loaded = 0;
-    const count = Math.min(PRELOAD_COUNT, TOTAL_FRAMES);
     return new Promise((resolve) => {
-      const done = () => {
-        loaded += 1;
-        loaderLine.style.setProperty("--loaded", (loaded / count).toFixed(3));
-        if (loaded >= count) resolve();
+      let settled = false;
+      let done = 0;
+      const t0 = performance.now();
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        resolve((done * 1000) / Math.max(1, performance.now() - t0));
       };
-      for (let i = 1; i <= count; i += 1) {
-        if (frames[i]) { done(); continue; }
-        const img = new Image();
-        img.decoding = "async";
-        img.onload = () => { frames[i] = img; done(); };
-        img.onerror = done;                                 // a missing frame must not block the page
-        img.src = framePath(i);
+      const tick = () => {
+        done += 1;
+        loaderLine.style.setProperty("--loaded", (done / PRELOAD_COUNT).toFixed(3));
+        if (done >= PRELOAD_COUNT) finish();
+      };
+      for (let i = 1; i <= PRELOAD_COUNT; i += 1) {
+        load(i).then((img) => frames.set(i, img)).catch(() => {}).finally(tick);
       }
-      setTimeout(resolve, 6000);                            // safety net on very slow networks
+      setTimeout(finish, 6000);
     });
+  }
+
+  /* After measuring, pick the tier and refetch the primed frames on it so
+     frame 1 matches frame 400. The canvas keeps its last paint meanwhile. */
+  function chooseTier(fps) {
+    if (tier !== "desktop") return;
+    if (fps < SLOW_FPS) tier = "mobile";
+    else if (fps >= FAST_FPS) tier = "hd";
+    else return;
+    queue.length = 0;
+    frames.clear();
+    seek(current);
+  }
+
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    window.__hero = { get index() { return current; }, get tier() { return tier; }, get cached() { return frames.size; }, nearest: () => nearestLoaded(current) };
   }
 
   /* =========================================================
@@ -721,8 +777,9 @@
   });
 
   sizeCanvas();
-  preload().then(() => {
-    ensureWindow();
+  preload().then((fps) => {
+    chooseTier(fps);
+    seek(current);
     updateHero();
     queueDraw();
     updateProgressBar();

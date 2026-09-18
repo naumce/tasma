@@ -8,3 +8,5 @@ __pycache__/
 .playwright-mcp/
 .DS_Store
 Thumbs.db
+source/clips-v2/
+source/conformed/
