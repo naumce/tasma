@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="mk">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ТАШМА · Природен органски мед</title>
-<meta name="description" content="ТАШМА. Суров, нефилтриран органски мед од ридовите на Македонија. Од кошница до тегла.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050403'/%3E%3Cpath d='M32 8l20 12v24L32 56 12 44V20z' fill='none' stroke='%23d9a441' stroke-width='4'/%3E%3C/svg%3E">
+<title>NECTRA · Raw Organic Honey</title>
+<meta name="description" content="NECTRA. Raw, unheated, unfiltered organic honey. From flower to jar. Untouched.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050403'/%3E%3Cpath d='M32 10l19 11v22L32 54 13 43V21z' fill='none' stroke='%23d9a441' stroke-width='2.5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -56,7 +56,10 @@
     transition: opacity 0.6s ease, visibility 0.6s ease;
   }
   .loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .loader__mark { font-family: var(--serif); font-size: 40px; letter-spacing: 6px; }
+  .wordmark { font-family: var(--sans) !important; font-weight: 500; letter-spacing: 0.42em !important; }
+  /* trailing tracking makes centred wordmarks sit left; balance it */
+  .loader__mark.wordmark, .hero-copy__brand.wordmark, .footer__brand.wordmark { padding-left: 0.42em; }
+  .loader__mark { font-family: var(--serif); font-size: 34px; letter-spacing: 6px; }
   .loader__line {
     width: 120px; height: 1px; margin: 18px auto 0;
     background: var(--gold-dim); position: relative; overflow: hidden;
@@ -294,137 +297,137 @@
 
 <div class="loader" id="loader" aria-hidden="true">
   <div>
-    <div class="loader__mark">ТАШМА</div>
+    <div class="loader__mark wordmark">NECTRA</div>
     <div class="loader__line" id="loaderLine"></div>
   </div>
 </div>
 
-<nav class="nav" aria-label="Главна навигација">
-  <a href="#top">ТАШМА</a>
-  <a href="#newsletter">Контакт</a>
+<nav class="nav" aria-label="Main navigation">
+  <a href="#top" class="wordmark">NECTRA</a>
+  <a href="#newsletter">Contact</a>
 </nav>
 <div class="progress" aria-hidden="true"><div class="progress__fill" id="progressFill"></div></div>
 
 <main id="top">
 
   <!-- 1. HERO -->
-  <section class="hero-track" id="heroTrack" aria-label="Ритуал на медот">
+  <section class="hero-track" id="heroTrack" aria-label="From flower to jar">
     <div class="hero-stage" id="heroStage">
       <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
       <div class="hero-copy" id="heroCopy">
-        <h1 class="hero-copy__brand" data-from="0.15" data-to="0.25">ТАШМА</h1>
-        <p class="hero-copy__line" data-from="0.35" data-to="0.45">Природен органски мед.</p>
-        <h2 class="hero-copy__chapter" data-from="0.55" data-to="0.67">ОД КОШНИЦА ДО ТЕГЛА</h2>
-        <p class="hero-copy__tag eyebrow" data-from="0.70" data-to="0.80">Една капка. Илјада цветови.</p>
+        <h1 class="hero-copy__brand wordmark" data-from="0.15" data-to="0.25">NECTRA</h1>
+        <p class="hero-copy__line" data-from="0.35" data-to="0.45">Raw organic honey.</p>
+        <h2 class="hero-copy__chapter" data-from="0.55" data-to="0.67">FROM FLOWER TO JAR</h2>
+        <p class="hero-copy__tag eyebrow" data-from="0.70" data-to="0.80">One drop. A thousand flowers.</p>
       </div>
     </div>
   </section>
 
   <!-- 2. STICKY EXPLAINER -->
-  <section class="explainer" aria-label="Потекло, процес, чистота">
+  <section class="explainer" aria-label="Origin, process, purity">
     <div class="explainer__media" id="explainerMedia">
-      <img src="images/hero/image-4-honey-into-jar.png" alt="Мед се точи во тегла ТАШМА" class="is-active" data-panel="0">
-      <img src="images/hero/image-5-honey-swirl.png" alt="Медот се врти во теглата" data-panel="1">
-      <img src="images/hero/image-7-hands-holding-jar.png" alt="Раце ја држат теглата ТАШМА" data-panel="2">
+      <img src="images/hero/image-4-honey-into-jar.png?v=nectra-1" alt="Honey pouring into a NECTRA jar" class="is-active" data-panel="0">
+      <img src="images/hero/image-5-honey-swirl.png?v=nectra-1" alt="Honey swirling in the jar" data-panel="1">
+      <img src="images/hero/image-7-hands-holding-jar.png?v=nectra-1" alt="Hands holding a NECTRA jar" data-panel="2">
     </div>
     <div class="explainer__panels">
       <article class="panel" data-panel="0">
-        <div class="eyebrow panel__index">01 / Потекло</div>
-        <h2>ПОТЕКЛО</h2>
-        <p class="panel__lead">„Од ридовите, не од фабрика.“</p>
-        <p class="panel__body">Меѓу ливадите и шумите, таму каде што пчелите сами го бираат цветот.</p>
+        <div class="eyebrow panel__index">01 / Origin</div>
+        <h2>ORIGIN</h2>
+        <p class="panel__lead">“From wild hills, not a factory.”</p>
+        <p class="panel__body">Meadows and forests where the bees choose their own flowers. Nothing planted for them, nothing sprayed.</p>
         <div class="panel__rule"></div>
       </article>
       <article class="panel" data-panel="1">
-        <div class="eyebrow panel__index">02 / Процес</div>
-        <h2>ПРОЦЕС</h2>
-        <p class="panel__lead">„Полека, како што налага природата.“</p>
-        <p class="panel__body">Без загревање и без филтрирање под притисок. Медот се точи каков што е.</p>
+        <div class="eyebrow panel__index">02 / Process</div>
+        <h2>PROCESS</h2>
+        <p class="panel__lead">“Slow, the way nature intended.”</p>
+        <p class="panel__body">Never heated. Never pressure-filtered. The honey is poured exactly as the hive made it.</p>
         <div class="panel__rule"></div>
       </article>
       <article class="panel" data-panel="2">
-        <div class="eyebrow panel__index">03 / Чистота</div>
-        <h2>ЧИСТОТА</h2>
-        <p class="panel__lead">„100% природно. Ништо повеќе.“</p>
-        <p class="panel__body">Само мед. Без додаден шеќер, без конзерванси, без боја.</p>
+        <div class="eyebrow panel__index">03 / Purity</div>
+        <h2>PURITY</h2>
+        <p class="panel__lead">“100% natural. Nothing else.”</p>
+        <p class="panel__body">Just honey. No added sugar, no preservatives, no colouring.</p>
         <div class="panel__rule"></div>
       </article>
     </div>
   </section>
 
   <!-- 3. HORIZONTAL COLLECTION RAIL -->
-  <section class="rail" id="rail" aria-label="Колекција">
+  <section class="rail" id="rail" aria-label="Collection">
     <div class="rail__track" id="railTrack">
       <div class="rail__panel">
-        <img src="images/hero/image-1-honeycomb-hero.png" alt="Саќе под топла светлина">
+        <img src="images/hero/image-1-honeycomb-hero.png" alt="Honeycomb under warm light">
         <div class="rail__copy">
-          <div class="eyebrow">Колекција</div>
-          <h2>МЕДОТ ТАШМА</h2>
+          <div class="eyebrow">Collection</div>
+          <h2>NECTRA HONEY</h2>
         </div>
       </div>
       <div class="rail__panel">
-        <img src="images/hero/image-3-honey-dripping-down.png" alt="Мед капе од саќето">
+        <img src="images/hero/image-3-honey-dripping-down.png" alt="Honey dripping from the comb">
         <div class="rail__copy">
-          <h2>СУРОВ</h2>
-          <p>Директно од саќето, недопрен.</p>
+          <h2>RAW</h2>
+          <p>Straight from the comb. Untouched.</p>
         </div>
       </div>
       <div class="rail__panel">
-        <img src="images/hero/image-5-honey-swirl.png" alt="Мед се врти во теглата">
+        <img src="images/hero/image-5-honey-swirl.png?v=nectra-1" alt="Honey swirling in the jar">
         <div class="rail__copy">
-          <h2>НЕФИЛТРИРАН</h2>
-          <p>Секоја капка ја чува природата во себе.</p>
+          <h2>UNFILTERED</h2>
+          <p>Every drop keeps the pollen, enzymes and flavour of its flowers.</p>
         </div>
       </div>
       <div class="rail__panel">
-        <img src="images/hero/image-7-hands-holding-jar.png" alt="Раце ја држат теглата ТАШМА">
+        <img src="images/hero/image-7-hands-holding-jar.png?v=nectra-1" alt="Hands holding a NECTRA jar">
         <div class="rail__copy">
-          <h2>НАШ</h2>
-          <p>Од нашите кошници до вашата трпеза.</p>
+          <h2>UNTOUCHED</h2>
+          <p>From our hives to your table, and nothing in between.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 4. STACKING RITUAL CARDS -->
-  <section class="rituals" aria-label="Ритуал">
+  <section class="rituals" aria-label="Ritual">
     <article class="card">
       <img class="card__bg" src="images/hero/image-2-honey-begin-to-flow.png" alt="">
       <div class="card__copy">
         <div class="card__num">01</div>
-        <h2 class="card__word">ТОЧИ</h2>
-        <p class="card__line">„Златна нишка, право од саќето.“</p>
+        <h2 class="card__word">POUR</h2>
+        <p class="card__line">“A golden thread, straight from the comb.”</p>
       </div>
     </article>
     <article class="card">
-      <img class="card__bg" src="images/hero/image-6-honey-spoon-pour.png" alt="">
+      <img class="card__bg" src="images/hero/image-6-honey-spoon-pour.png?v=nectra-1" alt="">
       <div class="card__copy">
         <div class="card__num">02</div>
-        <h2 class="card__word">ЗЕМИ</h2>
-        <p class="card__line">„Полна лажица, без брзање.“</p>
+        <h2 class="card__word">TAKE</h2>
+        <p class="card__line">“A full spoon. No hurry.”</p>
       </div>
     </article>
     <article class="card">
-      <img class="card__bg" src="images/hero/image-7-hands-holding-jar.png" alt="">
+      <img class="card__bg" src="images/hero/image-7-hands-holding-jar.png?v=nectra-1" alt="">
       <div class="card__copy">
         <div class="card__num">03</div>
-        <h2 class="card__word">ВКУСИ</h2>
-        <p class="card__line">„Мигот кога сè застанува.“</p>
+        <h2 class="card__word">TASTE</h2>
+        <p class="card__line">“The moment everything slows down.”</p>
       </div>
     </article>
   </section>
 
   <!-- 5. PARALLAX STATEMENT -->
-  <section class="statement" id="statement" aria-label="Изјава">
+  <section class="statement" id="statement" aria-label="Statement">
     <img class="statement__bg" id="statementBg" src="images/hero/image-3-honey-dripping-down.png" alt="">
     <div class="statement__copy">
-      <h2>Природна сладост,<br>недопрена.</h2>
-      <div class="eyebrow">ТАШМА. Од првата берба.</div>
+      <h2>Natural sweetness,<br>untouched.</h2>
+      <div class="eyebrow">NECTRA. From the first harvest.</div>
     </div>
   </section>
 
   <!-- 6. REVERSE COLUMNS -->
-  <section class="columns" id="columns" aria-label="Собран од дивото">
+  <section class="columns" id="columns" aria-label="Gathered from the wild">
     <div class="column" data-dir="-1">
       <img src="images/hero/image-1-honeycomb-hero.png" alt="">
       <img src="images/hero/image-1-honeycomb-hero.png" alt="">
@@ -440,35 +443,35 @@
       <img src="images/hero/image-1-honeycomb-hero.png" alt="">
       <img src="images/hero/image-1-honeycomb-hero.png" alt="">
     </div>
-    <div class="columns__overlay"><h2>Собран од дивината.</h2></div>
+    <div class="columns__overlay"><h2>Gathered from the wild.</h2></div>
   </section>
 
   <!-- 7. PRODUCT -->
-  <section class="product" id="product" aria-label="Производ">
+  <section class="product" id="product" aria-label="Product">
     <div class="product__card">
-      <img src="images/hero/image-4-honey-into-jar.png" alt="Тегла ТАШМА, природен органски мед">
+      <img src="images/hero/image-4-honey-into-jar.png?v=nectra-1" alt="NECTRA jar, raw organic honey">
       <div class="product__copy">
-        <div class="eyebrow">Единствениот</div>
-        <h2>ТАШМА</h2>
-        <p class="product__sub">Природен органски мед</p>
-        <p class="product__body">Суров, нефилтриран мед од кошници во ридовите. Наточен полека, без загревање, за да ја задржи секоја нота од цветот од кој потекнува.</p>
+        <div class="eyebrow">The only one</div>
+        <h2 class="wordmark">NECTRA</h2>
+        <p class="product__sub">Raw organic honey</p>
+        <p class="product__body">Raw, unfiltered honey from hives in the hills. Poured slowly and never heated, so it keeps every note of the flowers it came from.</p>
         <div class="product__rule"></div>
-        <div class="product__meta">Р.Б.О 243103326</div>
+        <div class="product__meta">Reg. No. 243103326</div>
       </div>
     </div>
   </section>
 
   <!-- 8. NEWSLETTER -->
-  <section class="newsletter" id="newsletter" aria-label="Билтен">
-    <img class="newsletter__bg" src="images/hero/image-7-hands-holding-jar.png" alt="">
+  <section class="newsletter" id="newsletter" aria-label="Newsletter">
+    <img class="newsletter__bg" src="images/hero/image-7-hands-holding-jar.png?v=nectra-1" alt="">
     <div class="newsletter__copy">
-      <h2>Придружи се на ритуалот.</h2>
-      <p>Нови берби, приказни од кошниците и рецепти. Само кога има што да се каже.</p>
+      <h2>Join the ritual.</h2>
+      <p>New harvests, stories from the hives, and recipes. Only when there is something worth saying.</p>
       <form class="form" id="form" novalidate>
-        <input type="email" name="email" id="email" placeholder="твојата е-пошта" autocomplete="email" required aria-label="Е-пошта">
-        <button type="submit">Пријави се</button>
+        <input type="email" name="email" id="email" placeholder="your email" autocomplete="email" required aria-label="Email">
+        <button type="submit">Subscribe</button>
       </form>
-      <p class="form__done">Благодариме. Ќе се слушнеме кога ќе биде време за берба.</p>
+      <p class="form__done">Thank you. We'll be in touch when the next harvest is ready.</p>
     </div>
   </section>
 
@@ -476,8 +479,8 @@
 
 <!-- 9. FOOTER -->
 <footer class="footer">
-  <div class="footer__brand">ТАШМА</div>
-  <div class="footer__copy">© 2026 ТАШМА · Природен органски мед · Сите права задржани</div>
+  <div class="footer__brand wordmark">NECTRA</div>
+  <div class="footer__copy">© 2026 NECTRA · Raw organic honey · All rights reserved</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
@@ -497,7 +500,7 @@
        - one draw per animation frame, never cancelled
        - directional prefetch with an urgent head so fast flicks stay fed
      ========================================================= */
-  const TOTAL_FRAMES = 523;         // frames/<tier>/frame_0001.webp ..
+  const TOTAL_FRAMES = 546;         // frames/<tier>/frame_0001.webp ..
   const PRELOAD_COUNT = 40;
   const WINDOW_AHEAD = 80;
   const CONCURRENCY = 10;
@@ -525,7 +528,9 @@
   let direction = 1;
   let drawQueued = false;
 
-  const framePath = (i) => `frames/${tier}/frame_${String(i).padStart(4, "0")}.webp`;
+  /* /frames and /images are served immutable: bump ASSET_VERSION whenever their bytes change */
+  const ASSET_VERSION = "nectra-1";
+  const framePath = (i) => `frames/${tier}/frame_${String(i).padStart(4, "0")}.webp?v=${ASSET_VERSION}`;
 
   function load(i) {
     return new Promise((resolve, reject) => {

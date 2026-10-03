@@ -1,4 +1,10 @@
-# ТАШМА — asset status
+# NECTRA (formerly ТАШМА) — asset status
+
+> Rebranded 2026-10-03. Spec: `docs/superpowers/specs/2026-10-03-nectra-rebrand-design.md`.
+> Jar keyframes 4–7 now carry the NECTRA label (`source/keyframes-v3/`); clips 3–6 are in
+> `source/clips-nectra/`; old ТАШМА stills archived in `source/keyframes-tashma-archive/`.
+> Rebuild everything with `python source/tools/rebuild_hero.py`, then bump `ASSET_VERSION`
+> in `public/index.html` (frames and images are served `immutable`).
 
 What exists, what the guide expected, and what is still optional.
 
@@ -9,11 +15,12 @@ What exists, what the guide expected, and what is still optional.
 | Hero keyframes 1–6 | `public/images/hero/image-{1..6}-*.png` | Supplied by you, conformed to 1920×1080 on black |
 | Hero keyframe 4 (v2) | `public/images/hero/image-4-honey-into-jar.png` | Regenerated 2026-09-18 (GPT Image 2.5) from image-5 as reference so the jar/label are identical across 4→7 |
 | Hero keyframe 7 (v2) | `public/images/hero/image-7-hands-holding-jar.png` | Regenerated 2026-09-18 as native 16:9 from image-6; no padding, no feather hack |
-| Hero clips 1, 2, 5 | `source/clips/v{1,2,5}-*.mp4` | FLUX 3 Video, 5s each, 1080p |
+| Hero clips 1, 2 | `source/clips/v{1,2}-*.mp4` | FLUX 3 Video, 5s each, 1080p |
+| Hero clip 5 (v3) | `source/clips-v3/v5-swirl-to-spoon.mp4` | MiniMax H3, 2K, 6.6s, regenerated 2026-10-03. Start/end keyframes are the exact last frame of clip 4 and first frame of clip 6, so both joins are seamless (old FLUX clip never brought the spoon in and hard-cut to clip 6) |
 | Hero clips 3, 4, 6 (v2) | `source/clips-v2/v{3,4,6}-*.mp4` | MiniMax H3, 2K, 6.6s each. Clip 3 is now an explicit tilt-down; clip 6 starts from the native-16:9 hands frame |
 | Conformed clips | `source/conformed/*.mp4` | All six at 1920×1080 / 24 fps, CRF 14 — the concat input |
-| Merged hero video | `source/honey-story-final.mp4` | Hard-cut concat of `source/conformed`, 34.9 s, 1920×1080, 24 fps |
-| Frame sequences | `public/frames/{hd,desktop,mobile}/frame_0001.webp …` | 523 frames @ 15 fps per tier: hd 1920w q80 (42 MB), desktop 1152w q72 (17 MB), mobile 640w q68 (7 MB). The hero preloader measures throughput on `desktop` and switches up or down |
+| Merged hero video | `source/honey-story-final.mp4` | Hard-cut concat of `source/conformed`, 36.4 s, 1920×1080, 24 fps |
+| Frame sequences | `public/frames/{hd,desktop,mobile}/frame_0001.webp …` | 546 frames @ 15 fps per tier: hd 1920w q80 (43 MB), desktop 1152w q72 (17 MB), mobile 640w q68 (7 MB). The hero preloader measures throughput on `desktop` and switches up or down |
 | Edge feather | — | No longer needed: image-7 v2 is native 16:9. `feather.py` is kept for history only |
 | Site | `public/index.html` | Single file, vanilla JS, GSAP + ScrollTrigger + Lenis from jsDelivr, fonts from Google Fonts (Cormorant Garamond + Inter, both with Cyrillic). Verified in Chromium at 1440×900 and 390×844. |
 

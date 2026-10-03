@@ -1,4 +1,11 @@
-# ТАШМА — hero clip prompts
+# Hero clip prompts
+
+> **2026-10-03 — NECTRA rebrand.** Clips 3–6 were regenerated with MiniMax H3 (2K, 6 s) into
+> `source/clips-nectra/`. Keyframes are `source/keyframes-v3/` (label master = image-5, edited with
+> GPT Image 2.5). Clip 3 starts on clip 2's actual last frame; each later clip runs keyframe →
+> keyframe. The prompts below are the original ТАШМА versions; the NECTRA versions are the same
+> beats with "dark amber NECTRA label (gold hexagon icon, NECTRA, RAW ORGANIC HONEY)" in place of
+> the ТАШМА label. Rebuild with `python source/tools/rebuild_hero.py`.
 
 Six start→end clips, adapted from the Assam Honey guide to match the images that actually
 exist. All frames are conformed to **1920×1080 (16:9)**, subject centred on black.
